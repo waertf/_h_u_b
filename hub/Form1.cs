@@ -51,6 +51,8 @@ namespace hub
             //start to send to avls server
             TcpClient avlsTcpClient = null;
             NetworkStream networkStream = null;
+            string lat_str = gps_lat, long_str = gps_long;
+            ConvertLocToAvlsLoc(ref lat_str, ref long_str); 
             try
             {
                 string Temp = "NA";
@@ -62,7 +64,7 @@ namespace hub
                 string gps = "A";
                 string _event = "0";
                 string message = "null";
-                string loc = "null";
+                string loc = "N" + lat_str + "E" + long_str;
                 string package = "%%" + uid + "," +
                               gps + "," +
                               time + "," +
@@ -94,6 +96,17 @@ namespace hub
             }
             
 
+        }
+        private void ConvertLocToAvlsLoc(ref string lat, ref string lon)
+        {
+            double tmpLat = double.Parse(lat);
+            double tmpLon = double.Parse(lon);
+            double latInt = Math.Truncate(tmpLat);
+            double lonInt = Math.Truncate(tmpLon);
+            double latNumberAfterPoint = tmpLat - latInt;
+            double lonNumberAfterPoint = tmpLon - lonInt;
+            lat = ((latNumberAfterPoint * 60 / 100 + latInt) * 100).ToString();
+            lon = ((lonNumberAfterPoint * 60 / 100 + lonInt) * 100).ToString();
         }
     }
 }

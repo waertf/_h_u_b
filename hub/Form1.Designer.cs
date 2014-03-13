@@ -58,7 +58,7 @@
             // 
             this.kmPerHour.AutoSize = true;
             this.kmPerHour.Font = new System.Drawing.Font("PMingLiU", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.kmPerHour.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.kmPerHour.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
             this.kmPerHour.Location = new System.Drawing.Point(295, 81);
             this.kmPerHour.Name = "kmPerHour";
             this.kmPerHour.Size = new System.Drawing.Size(105, 43);
@@ -69,7 +69,7 @@
             // 
             this.speedLabel.AutoSize = true;
             this.speedLabel.Font = new System.Drawing.Font("PMingLiU", 150F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.speedLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.speedLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
             this.speedLabel.Location = new System.Drawing.Point(-34, 0);
             this.speedLabel.Name = "speedLabel";
             this.speedLabel.Size = new System.Drawing.Size(369, 200);
@@ -90,7 +90,7 @@
             // 
             this.persent.AutoSize = true;
             this.persent.Font = new System.Drawing.Font("PMingLiU", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.persent.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.persent.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
             this.persent.Location = new System.Drawing.Point(319, 82);
             this.persent.Name = "persent";
             this.persent.Size = new System.Drawing.Size(54, 43);
@@ -101,7 +101,7 @@
             // 
             this.batteryLabel.AutoSize = true;
             this.batteryLabel.Font = new System.Drawing.Font("PMingLiU", 150F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.batteryLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.batteryLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
             this.batteryLabel.Location = new System.Drawing.Point(-32, 0);
             this.batteryLabel.Name = "batteryLabel";
             this.batteryLabel.Size = new System.Drawing.Size(369, 200);
@@ -131,7 +131,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("PMingLiU", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
             this.label3.Location = new System.Drawing.Point(295, 129);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(102, 43);
@@ -142,7 +142,7 @@
             // 
             this.taskLabel.AutoSize = true;
             this.taskLabel.Font = new System.Drawing.Font("PMingLiU", 150F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.taskLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.taskLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
             this.taskLabel.Location = new System.Drawing.Point(-32, 3);
             this.taskLabel.Name = "taskLabel";
             this.taskLabel.Size = new System.Drawing.Size(369, 200);

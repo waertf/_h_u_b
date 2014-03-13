@@ -45,6 +45,8 @@ namespace hub
             string roadtype2 = xml.GetChildContent("roadtype");
             this.InvokeEx(f=>f.speedLabel.Text = speed);
             this.InvokeEx(f => f.batteryLabel.Text = electricity);
+            this.InvokeEx(f => f.Invalidate());
+            this.InvokeEx(f => f.Update());
             
 
             //start to send to avls server

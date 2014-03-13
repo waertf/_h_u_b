@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
@@ -51,10 +52,11 @@ namespace hub
             //start to send to avls server
             TcpClient avlsTcpClient = null;
             NetworkStream networkStream = null;
-            string lat_str = gps_lat, long_str = gps_long;
-            ConvertLocToAvlsLoc(ref lat_str, ref long_str); 
+            
             try
             {
+                string lat_str = gps_lat, long_str = gps_long;
+                ConvertLocToAvlsLoc(ref lat_str, ref long_str);
                 string Temp = "NA";
                 string Status = "00000000";
                 string time = DateTime.UtcNow.ToString("yyMMddHHmmss");
@@ -82,10 +84,10 @@ namespace hub
                 networkStream.Write(sendByte, 0, sendByte.Length);
                 networkStream.Flush();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                //throw;
+                Debug.WriteLine(ex);
             }
             finally
             {

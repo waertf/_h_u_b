@@ -34,9 +34,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.persent = new System.Windows.Forms.Label();
             this.batteryLabel = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.Task = new System.Windows.Forms.Label();
             this.taskLabel = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
@@ -80,7 +79,6 @@
             // 
             this.panel2.Controls.Add(this.persent);
             this.panel2.Controls.Add(this.batteryLabel);
-            this.panel2.Controls.Add(this.label2);
             this.panel2.Location = new System.Drawing.Point(0, 200);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(400, 200);
@@ -108,35 +106,25 @@
             this.batteryLabel.TabIndex = 2;
             this.batteryLabel.Text = "000";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(0, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 12);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "label2";
-            // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.Task);
             this.panel3.Controls.Add(this.taskLabel);
             this.panel3.Location = new System.Drawing.Point(0, 400);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(400, 200);
             this.panel3.TabIndex = 2;
             // 
-            // label3
+            // Task
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("PMingLiU", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
-            this.label3.Location = new System.Drawing.Point(295, 129);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(102, 43);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Task";
+            this.Task.AutoSize = true;
+            this.Task.Font = new System.Drawing.Font("PMingLiU", 32F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.Task.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(178)))), ((int)(((byte)(241)))));
+            this.Task.Location = new System.Drawing.Point(295, 129);
+            this.Task.Name = "Task";
+            this.Task.Size = new System.Drawing.Size(102, 43);
+            this.Task.TabIndex = 4;
+            this.Task.Text = "Task";
             // 
             // taskLabel
             // 
@@ -196,11 +184,10 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label speedLabel;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label kmPerHour;
         private System.Windows.Forms.Label batteryLabel;
         private System.Windows.Forms.Label persent;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label Task;
         private System.Windows.Forms.Label taskLabel;
 
     }

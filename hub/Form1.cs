@@ -43,11 +43,9 @@ namespace hub
             string roadtype1 = xml.GetChildContent("roadtype");
             xml.NextSibling2();
             string roadtype2 = xml.GetChildContent("roadtype");
-            Invoke((MethodInvoker)delegate
-            {
-                speedLabel.Text = speed;
-                batteryLabel.Text = electricity;
-            });
+            this.InvokeEx(f=>f.speedLabel.Text = speed);
+            this.InvokeEx(f => f.batteryLabel.Text = electricity);
+            
 
             //start to send to avls server
             TcpClient avlsTcpClient = null;
@@ -109,6 +107,20 @@ namespace hub
             double lonNumberAfterPoint = tmpLon - lonInt;
             lat = ((latNumberAfterPoint * 60 / 100 + latInt) * 100).ToString();
             lon = ((lonNumberAfterPoint * 60 / 100 + lonInt) * 100).ToString();
+        }
+    }
+    public static class ISynchronizeInvokeExtensions
+    {
+        public static void InvokeEx<T>(this T @this, Action<T> action) where T : ISynchronizeInvoke
+        {
+            if (@this.InvokeRequired)
+            {
+                @this.Invoke(action, new object[] { @this });
+            }
+            else
+            {
+                action(@this);
+            }
         }
     }
 }

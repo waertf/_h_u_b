@@ -25,7 +25,7 @@ namespace textBox
             autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
             autoWebServiceRequestTimer.Enabled = true;
 
-            var requestTaskNumberThread = new Thread(TaskNumberRequest());
+            var requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
             requestTaskNumberThread.Start();
         }
 

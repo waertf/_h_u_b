@@ -10,7 +10,7 @@
 		<motor_temperature>81</motor_temperature>
 		<remain_mileage>94</remain_mileage>	<!-- km -->
 		<used_mileage>2.2</used_mileage>	<!-- km -->
-		<direction>直走</direction>	<!-- 直走、左轉、右轉 -->
+		<direction>右轉</direction>	<!-- 直走、左轉、右轉 -->
 	</CarInfo_data>
 	<Road_data>	<!-- 路況資訊 -->
 		<record>

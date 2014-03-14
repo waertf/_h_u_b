@@ -18,5 +18,15 @@
 			<gps_y>25.047911</gps_y>
 			<roadtype>阻塞</roadtype>
 		</record>
+    <record>
+      <gps_x>121.553825</gps_x>
+      <gps_y>25.056639</gps_y>
+      <roadtype>事故</roadtype>
+    </record>
+    <record>
+      <gps_x>121.553827</gps_x>
+      <gps_y>25.056634</gps_y>
+      <roadtype>道路施工</roadtype>
+    </record>
 	</Road_data>
 </Data>

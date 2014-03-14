@@ -16,17 +16,27 @@ namespace textBox
 {
     public partial class Form1 : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private System.Timers.Timer autoWebServiceRequestTimer;
+        private Thread requestTaskNumberThread;
         public Form1()
         {
             InitializeComponent();
 
-            var autoWebServiceRequestTimer =
+            autoWebServiceRequestTimer =
                     new System.Timers.Timer((int)uint.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
             autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
             autoWebServiceRequestTimer.Enabled = true;
 
-            var requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
+            requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
             requestTaskNumberThread.Start();
+            this.Closed += new EventHandler(Form1_Closed);
+        }
+
+        void Form1_Closed(object sender, EventArgs e)
+        {
+            autoWebServiceRequestTimer.Enabled = false;
+            requestTaskNumberThread.Abort();
         }
 
         private ThreadStart TaskNumberRequest()
@@ -68,9 +78,9 @@ namespace textBox
 
                         
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    
+                    log.Error(ex);
                     if(taskTcpClient!=null)
                         taskTcpClient.Close();
                     if(netStream!=null)
@@ -173,7 +183,7 @@ namespace textBox
             catch (Exception ex)
             {
 
-                Debug.WriteLine(ex);
+                log.Error(ex);
             }
             finally
             {

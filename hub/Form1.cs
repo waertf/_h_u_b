@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -31,6 +32,7 @@ namespace hub
         private void WebServiceRequest()
         {
             Chilkat.Xml xml = new Chilkat.Xml();
+            xml.Encoding = "utf-8";
             xml.LoadXmlFile("data.xml");
             // Navigate to the first company record.
             xml.FirstChild2();
@@ -38,11 +40,20 @@ namespace hub
             string gps_lat = xml.GetChildContent("gps_lat");
             string speed = xml.GetChildContent("speed");
             string electricity = xml.GetChildContent("electricity");
+            string direction = xml.GetChildContent("direction");
             xml.NextSibling2();
+            int roadCount = xml.NumChildrenHavingTag("record");
             xml.FirstChild2();
-            string roadtype1 = xml.GetChildContent("roadtype");
-            xml.NextSibling2();
-            string roadtype2 = xml.GetChildContent("roadtype");
+            List<string> roadTypeList = new List<string>();
+            for (int i = 0; i < roadCount; i++)
+            {
+                roadTypeList.Add(xml.GetChildContent("roadtype"));
+                xml.NextSibling2();
+            }
+            xml.Dispose();
+            //string roadtype1 = xml.GetChildContent("roadtype");
+            //xml.NextSibling2();
+            //string roadtype2 = xml.GetChildContent("roadtype");
             this.InvokeEx(f=>f.speedLabel.Text = speed);
             this.InvokeEx(f => f.batteryLabel.Text = electricity);
             this.InvokeEx(f => f.Invalidate());
@@ -81,8 +92,11 @@ namespace hub
                 avlsTcpClient = new TcpClient(ConfigurationManager.AppSettings["AVLS_SERVER_IP"],
                     int.Parse(ConfigurationManager.AppSettings["AVLS_SERVER_PORT"]));
                 networkStream = avlsTcpClient.GetStream();
-                networkStream.Write(sendByte, 0, sendByte.Length);
-                networkStream.Flush();
+                BufferedStream bs = new BufferedStream(networkStream);
+                bs.Write(sendByte, 0, sendByte.Length);
+                bs.Flush();
+                //networkStream.Write(sendByte, 0, sendByte.Length);
+                //networkStream.Flush();
             }
             catch (Exception ex)
             {

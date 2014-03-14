@@ -24,6 +24,8 @@ namespace textBox
         {
             InitializeComponent();
 
+            textBoxTask.Text = "0";
+
             autoWebServiceRequestTimer =
                     new System.Timers.Timer((int)uint.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
             autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
@@ -94,6 +96,11 @@ namespace textBox
 
         private void WebServiceRequest()
         {
+            this.InvokeEx(f => f.textBoxRoadType1.Clear());
+            this.InvokeEx(f => f.textBoxRoadType2.Clear());
+            this.InvokeEx(f => f.textBoxRoadType3.Clear());
+            this.InvokeEx(f => f.Invalidate());
+            this.InvokeEx(f => f.Update());
             Chilkat.Xml xml = new Chilkat.Xml();
             xml.Encoding = "utf-8";
             string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);

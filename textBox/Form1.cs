@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace textBox
@@ -19,11 +20,67 @@ namespace textBox
         {
             InitializeComponent();
 
-            var autoSendFromSqlTableTimer =
+            var autoWebServiceRequestTimer =
                     new System.Timers.Timer((int)uint.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
-            autoSendFromSqlTableTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
-            autoSendFromSqlTableTimer.Enabled = true;
+            autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
+            autoWebServiceRequestTimer.Enabled = true;
+
+            var requestTaskNumberThread = new Thread(TaskNumberRequest());
+            requestTaskNumberThread.Start();
         }
+
+        private ThreadStart TaskNumberRequest()
+        {
+            TcpClient taskTcpClient = null;
+            NetworkStream netStream = null;
+            BufferedStream bs = null;
+            string data = string.Empty;
+            while (true)
+            {
+                try
+                {
+                    if(taskTcpClient==null)
+                        taskTcpClient = new TcpClient(ConfigurationManager.AppSettings["TASK_SERVER_IP"],
+                    int.Parse(ConfigurationManager.AppSettings["TASK_SERVER_PORT"]));
+                    if (netStream == null)
+                    {
+                        netStream = taskTcpClient.GetStream();
+                        bs = new BufferedStream(netStream);
+                    }
+                    while (true)
+                    {
+                        byte[] bytes = new byte[1024];
+                        if (bs.CanRead)
+                        {
+                            bs.Read(bytes, 0, bytes.Length);
+                            data += Encoding.UTF8.GetString(bytes);
+                            if (data.IndexOf("#") > -1)
+                            {
+                                var splitData = data.Split(new char[] {'#'});
+                                string task = splitData[0];
+                                this.InvokeEx(f => f.textBoxTask.Text = task);
+                                this.InvokeEx(f => f.Invalidate());
+                                this.InvokeEx(f => f.Update());
+                                break;
+                            }
+                        }
+                    }
+
+                        
+                }
+                catch (Exception)
+                {
+                    
+                    if(taskTcpClient!=null)
+                        taskTcpClient.Close();
+                    if(netStream!=null)
+                        netStream.Close();
+                    if(bs!=null)
+                        bs.Close();
+                }
+            }
+        }
+
         private void WebServiceRequest()
         {
             Chilkat.Xml xml = new Chilkat.Xml();
@@ -104,8 +161,12 @@ namespace textBox
                     int.Parse(ConfigurationManager.AppSettings["AVLS_SERVER_PORT"]));
                 networkStream = avlsTcpClient.GetStream();
                 BufferedStream bs = new BufferedStream(networkStream);
-                bs.Write(sendByte, 0, sendByte.Length);
-                bs.Flush();
+                if (bs.CanWrite)
+                {
+                    bs.Write(sendByte, 0, sendByte.Length);
+                    bs.Flush();
+                }
+                
                 //networkStream.Write(sendByte, 0, sendByte.Length);
                 //networkStream.Flush();
             }

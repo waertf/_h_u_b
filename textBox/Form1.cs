@@ -19,6 +19,7 @@ namespace textBox
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private System.Timers.Timer autoWebServiceRequestTimer;
         private Thread requestTaskNumberThread;
+        static Random rand = new Random();
         public Form1()
         {
             InitializeComponent();
@@ -95,7 +96,8 @@ namespace textBox
         {
             Chilkat.Xml xml = new Chilkat.Xml();
             xml.Encoding = "utf-8";
-            xml.LoadXmlFile("data.xml");
+            string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+            xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
             // Navigate to the first company record.
             xml.FirstChild2();
             string gps_long = xml.GetChildContent("gps_long");

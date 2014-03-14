@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Data>
+	<CarInfo_data>	<!-- 車身資訊 -->
+		<gps_long>121.548933</gps_long>
+		<gps_lat>25.052168</gps_lat>
+		<speed>59</speed>
+		<electricity>93</electricity>	<!-- % -->
+		<remaintime>7.0</remaintime>	<!-- hr -->
+		<engine_temperature>60</engine_temperature>
+		<motor_temperature>80</motor_temperature>
+		<remain_mileage>93</remain_mileage>	<!-- km -->
+		<used_mileage>3.0</used_mileage>	<!-- km -->
+		<direction>直走</direction>	<!-- 直走、左轉、右轉 -->
+	</CarInfo_data>
+	<Road_data>	<!-- 路況資訊 -->
+		<record>
+			<gps_x>121.548847</gps_x>
+			<gps_y>25.047911</gps_y>
+			<roadtype>阻塞</roadtype>
+		</record>
+	</Road_data>
+</Data>

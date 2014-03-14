@@ -45,8 +45,8 @@ namespace textBox
         private ThreadStart TaskNumberRequest()
         {
             TcpClient taskTcpClient = null;
-            NetworkStream netStream = null;
-            BufferedStream bs = null;
+            NetworkStream taskNetStream = null;
+            BufferedStream taskBs = null;
             string data = string.Empty;
             while (true)
             {
@@ -55,17 +55,17 @@ namespace textBox
                     if(taskTcpClient==null)
                         taskTcpClient = new TcpClient(ConfigurationManager.AppSettings["TASK_SERVER_IP"],
                     int.Parse(ConfigurationManager.AppSettings["TASK_SERVER_PORT"]));
-                    if (netStream == null)
+                    if (taskNetStream == null)
                     {
-                        netStream = taskTcpClient.GetStream();
-                        bs = new BufferedStream(netStream);
+                        taskNetStream = taskTcpClient.GetStream();
+                        taskBs = new BufferedStream(taskNetStream);
                     }
                     while (true)
                     {
                         byte[] bytes = new byte[1024];
-                        if (bs.CanRead)
+                        if (taskBs.CanRead)
                         {
-                            bs.Read(bytes, 0, bytes.Length);
+                            taskBs.Read(bytes, 0, bytes.Length);
                             data += Encoding.UTF8.GetString(bytes);
                             if (data.IndexOf("#") > -1)
                             {
@@ -86,14 +86,17 @@ namespace textBox
                     log.Error(ex);
                     if(taskTcpClient!=null)
                         taskTcpClient.Close();
-                    if(netStream!=null)
-                        netStream.Close();
-                    if(bs!=null)
-                        bs.Close();
+                    if(taskNetStream!=null)
+                        taskNetStream.Close();
+                    taskTcpClient = null;
+                    taskNetStream = null;
                 }
             }
         }
 
+        TcpClient _avlsTcpClient = null;
+        NetworkStream _avlsNetworkStream = null;
+        private BufferedStream _avlsBufferedStream = null;
         private void WebServiceRequest()
         {
             this.InvokeEx(f => f.textBoxRoadType1.Clear());
@@ -148,8 +151,7 @@ namespace textBox
 
 
             //start to send to avls server
-            TcpClient avlsTcpClient = null;
-            NetworkStream networkStream = null;
+            
 
             try
             {
@@ -176,30 +178,39 @@ namespace textBox
                               _event + "," +
                               message + Environment.NewLine;
                 byte[] sendByte = Encoding.UTF8.GetBytes(package);
-                avlsTcpClient = new TcpClient(ConfigurationManager.AppSettings["AVLS_SERVER_IP"],
+                if(_avlsTcpClient==null)
+                _avlsTcpClient = new TcpClient(ConfigurationManager.AppSettings["AVLS_SERVER_IP"],
                     int.Parse(ConfigurationManager.AppSettings["AVLS_SERVER_PORT"]));
-                networkStream = avlsTcpClient.GetStream();
-                BufferedStream bs = new BufferedStream(networkStream);
-                if (bs.CanWrite)
+                if (_avlsNetworkStream == null)
                 {
-                    bs.Write(sendByte, 0, sendByte.Length);
-                    bs.Flush();
+                    _avlsNetworkStream = _avlsTcpClient.GetStream();
+                    _avlsBufferedStream = new BufferedStream(_avlsNetworkStream);
                 }
                 
-                //networkStream.Write(sendByte, 0, sendByte.Length);
-                //networkStream.Flush();
+                if (_avlsBufferedStream.CanWrite)
+                {
+                    _avlsBufferedStream.Write(sendByte, 0, sendByte.Length);
+                    _avlsBufferedStream.Flush();
+                }
+                
+                //avlsNetworkStream.Write(sendByte, 0, sendByte.Length);
+                //avlsNetworkStream.Flush();
             }
             catch (Exception ex)
             {
 
                 log.Error(ex);
+                if (_avlsTcpClient != null)
+                    _avlsTcpClient.Close();
+                if (_avlsNetworkStream != null)
+                    _avlsNetworkStream.Close();
+                _avlsTcpClient = null;
+                _avlsNetworkStream = null;
+
             }
             finally
             {
-                if (networkStream != null)
-                    networkStream.Close();
-                if (avlsTcpClient != null)
-                    avlsTcpClient.Close();
+                
             }
 
 

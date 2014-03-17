@@ -58,17 +58,17 @@ namespace textBox
                     if (taskNetStream == null)
                     {
                         taskNetStream = taskTcpClient.GetStream();
-                        taskBs = new BufferedStream(taskNetStream);
                     }
                     while (true)
                     {
-                        byte[] bytes = new byte[2];
-                        if (taskBs.CanRead)
+                        byte[] bytes = new byte[3];
+                        if (taskNetStream.CanRead)
                         {
-                            taskBs.Read(bytes, 0, bytes.Length);
+                            taskNetStream.Read(bytes, 0, bytes.Length);
                             data += Encoding.UTF8.GetString(bytes);
                             if (data.IndexOf("#") > -1)
                             {
+                                taskNetStream.Flush();
                                 var splitData = data.Split(new char[] {'#'});
                                 string task = splitData[0];
                                 this.InvokeEx(f => f.textBoxTask.Text = task);

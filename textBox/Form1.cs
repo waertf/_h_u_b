@@ -24,7 +24,7 @@ namespace textBox
         {
             InitializeComponent();
 
-            textBoxTask.Text = "0";
+            //textBoxTask.Text = "0";
 
             autoWebServiceRequestTimer =
                     new System.Timers.Timer((int)uint.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
@@ -47,9 +47,9 @@ namespace textBox
             TcpClient taskTcpClient = null;
             NetworkStream taskNetStream = null;
             BufferedStream taskBs = null;
-            string data = string.Empty;
             while (true)
             {
+                string data = string.Empty;
                 try
                 {
                     if(taskTcpClient==null)
@@ -62,7 +62,7 @@ namespace textBox
                     }
                     while (true)
                     {
-                        byte[] bytes = new byte[1024];
+                        byte[] bytes = new byte[2];
                         if (taskBs.CanRead)
                         {
                             taskBs.Read(bytes, 0, bytes.Length);

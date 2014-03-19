@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -94,11 +95,26 @@ namespace textBox
             }
         }
 
+        string ReadTextFromUrl(string url)
+        {
+            // WebClient is still convenient
+            // Assume UTF8, but detect BOM - could also honor response charset I suppose
+            using (var client = new WebClient())
+            using (var stream = client.OpenRead(url))
+            using (var textReader = new StreamReader(stream, Encoding.UTF8, true))
+            {
+                return textReader.ReadToEnd();
+            }
+        }
         TcpClient _avlsTcpClient = null;
         NetworkStream _avlsNetworkStream = null;
         private BufferedStream _avlsBufferedStream = null;
+        private uint sid = 1;
+        
         private void WebServiceRequest()
         {
+            //http://192.168.1.35/carinfo.php?sid=1
+            //sid range:1 to 5257
             this.InvokeEx(f => f.textBoxRoadType1.Clear());
             this.InvokeEx(f => f.textBoxRoadType2.Clear());
             this.InvokeEx(f => f.textBoxRoadType3.Clear());
@@ -106,8 +122,18 @@ namespace textBox
             this.InvokeEx(f => f.Update());
             Chilkat.Xml xml = new Chilkat.Xml();
             xml.Encoding = "utf-8";
-            string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
-            xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
+            //string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+            //Debug.WriteLine(ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] + @"/carinfo.php?sid=" + rand.Next(1,5258)));
+            //xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
+            xml.LoadXml(
+                ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
+                                @"/carinfo.php?sid=" + sid));
+            if (sid.Equals(5257))
+                sid = 1;
+            else
+            {
+                sid++;
+            }
             // Navigate to the first company record.
             xml.FirstChild2();
             string gps_long = xml.GetChildContent("gps_long");

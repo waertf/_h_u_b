@@ -24,7 +24,9 @@ namespace textBox
         public Form1()
         {
             InitializeComponent();
-
+            sbyte[] signed = { -2, -1, 0, 1, 2 };
+            byte[] unsigned = new byte[signed.Length];
+            Buffer.BlockCopy(signed, 0, unsigned, 0, signed.Length); 
             //textBoxTask.Text = "0";
 
             autoWebServiceRequestTimer =

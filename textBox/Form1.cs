@@ -24,8 +24,8 @@ namespace textBox
         public Form1()
         {
             InitializeComponent();
-            Form videoplayer = new VideoPlayer();
-            videoplayer.Show();
+            Program.vi.Show();
+            Program.vi.Play();
             sbyte[] signed = { -2, -1, 0, 1, 2 };
             byte[] unsigned = new byte[signed.Length];
             Buffer.BlockCopy(signed, 0, unsigned, 0, signed.Length); 

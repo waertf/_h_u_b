@@ -10,12 +10,17 @@ namespace textBox
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread]
+        public static VideoPlayer vi;
+        [STAThread] 
+        
         static void Main()
         {
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            vi = new VideoPlayer();
             Application.Run(new Form1());
+            
         }
     }
 }

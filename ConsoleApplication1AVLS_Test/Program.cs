@@ -18,9 +18,9 @@ namespace ConsoleApplication1AVLS_Test
                 avlSbytes.Add(-128);
                 avlSbytes.Add(0);
                 avlSbytes.Add(34);
-                sbyte fiveSbyte = Convert.ToSByte(DateTime.Now.Year/256);
+                sbyte fiveSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year / 256));
                 avlSbytes.Add(fiveSbyte);
-                sbyte sixSbyte = Convert.ToSByte(DateTime.Now.Year%256);
+                sbyte sixSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year % 256));
                 avlSbytes.Add(sixSbyte);
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Month));
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Day));

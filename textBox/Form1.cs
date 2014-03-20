@@ -19,13 +19,12 @@ namespace textBox
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private System.Timers.Timer autoWebServiceRequestTimer;
-        private Thread requestTaskNumberThread;
+        private Thread requestTaskNumberThread,videoPlayerThread;
         static Random rand = new Random();
         public Form1()
         {
             InitializeComponent();
-            Program.vi.Show();
-            Program.vi.Play();
+            
             sbyte[] signed = { -2, -1, 0, 1, 2 };
             byte[] unsigned = new byte[signed.Length];
             Buffer.BlockCopy(signed, 0, unsigned, 0, signed.Length); 
@@ -34,11 +33,34 @@ namespace textBox
             autoWebServiceRequestTimer =
                     new System.Timers.Timer((int)uint.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
             autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
-            autoWebServiceRequestTimer.Enabled = true;
+            
 
             requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
-            requestTaskNumberThread.Start();
+            videoPlayerThread = new Thread(()=>VideoPlayerThread());
+            videoPlayerThread.Start();
+            
             this.Closed += new EventHandler(Form1_Closed);
+        }
+
+        private void VideoPlayerThread()
+        {
+            Program.videoPlayer.Invoke((Action)delegate
+            {
+                Program.videoPlayer.Show();
+                Program.videoPlayer.Play();
+            });
+            while (true)
+            {
+                if (Program.videoPlayer.VideoPlayerState!=null)
+                if (Program.videoPlayer.VideoPlayerState.Equals("Playing"))
+                {
+                    autoWebServiceRequestTimer.Enabled = true;
+                    requestTaskNumberThread.Start();
+                    break;
+                }
+
+            }
+            
         }
 
         void Form1_Closed(object sender, EventArgs e)

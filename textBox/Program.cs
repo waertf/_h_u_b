@@ -10,7 +10,7 @@ namespace textBox
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        public static VideoPlayer vi;
+        public static VideoPlayer videoPlayer;
         [STAThread] 
         
         static void Main()
@@ -18,7 +18,7 @@ namespace textBox
             
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            vi = new VideoPlayer();
+            videoPlayer = new VideoPlayer();
             Application.Run(new Form1());
             
         }

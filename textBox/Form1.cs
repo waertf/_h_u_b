@@ -303,10 +303,18 @@ namespace textBox
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.ToUniversalTime().Hour));
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Minute));
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Second));
-                for (int i = 0; i < 10; i++)
-                {
-                    avlSbytes.Add(48);
-                }
+                
+                avlSbytes.Add(0x30);
+                avlSbytes.Add(0x39);
+                avlSbytes.Add(0x31);
+                avlSbytes.Add(0x32);
+                avlSbytes.Add(0x33);
+                avlSbytes.Add(0x34);
+                avlSbytes.Add(0x35);
+                avlSbytes.Add(0x36);
+                avlSbytes.Add(0x37);
+                avlSbytes.Add(0x38);
+               
                 avlSbytes.Add(69);
                 ConvertLocation(avlSbytes, gps_long);
                 avlSbytes.Add(78);
@@ -365,13 +373,16 @@ namespace textBox
         private void ConvertLocation(List<sbyte> avlSbytes, string lat)
         {
             string[] result = lat.Split(new char[] { '.' });
-            string firstResult = result[1].Substring(0, 2);
-            string secondResult = result[1].Substring(2, 2);
-            string thridResult = result[1].Substring(4, 2);
             avlSbytes.Add((sbyte)(Convert.ToByte(result[0])));
+
+            string firstResult = result[1].Substring(0, 2);
             avlSbytes.Add((sbyte)(Convert.ToByte(firstResult)));
+            string secondResult = result[1].Substring(2, 2);
             avlSbytes.Add((sbyte)(Convert.ToByte(secondResult)));
+            string thridResult = "0";
             avlSbytes.Add((sbyte)(Convert.ToByte(thridResult)));
+            
+            
         }
         private void ConvertLocToAvlsLoc(ref string lat, ref string lon)
         {

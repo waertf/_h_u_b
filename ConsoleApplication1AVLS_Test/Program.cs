@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 
 namespace ConsoleApplication1AVLS_Test
@@ -57,6 +58,11 @@ namespace ConsoleApplication1AVLS_Test
             {
                 byte[] unsigned = new byte[avlSbytes.Count];
                 Buffer.BlockCopy(avlSbytes.ToArray(), 0, unsigned, 0, avlSbytes.Count);
+                TcpClient avlsTcpClient = new TcpClient("192.168.1.29",7000);
+                NetworkStream networkStream = avlsTcpClient.GetStream();
+                networkStream.Write(unsigned,0,unsigned.Length);
+                avlsTcpClient.Close();
+                networkStream.Close();
             }
         }
 

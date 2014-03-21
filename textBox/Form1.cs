@@ -134,7 +134,6 @@ namespace textBox
         }
         TcpClient _avlsTcpClient = null;
         NetworkStream _avlsNetworkStream = null;
-        private BufferedStream _avlsBufferedStream = null;
         private uint sid = 1;
         
         private void WebServiceRequest()
@@ -203,46 +202,59 @@ namespace textBox
 
 
             //start to send to avls server
-            
 
+            List<sbyte> avlSbytes = new List<sbyte>();
             try
             {
-                string lat_str = gps_lat, long_str = gps_long;
-                ConvertLocToAvlsLoc(ref lat_str, ref long_str);
-                string Temp = "NA";
-                string Status = "00000000";
-                string time = DateTime.UtcNow.ToString("yyMMddHHmmss");
-                string Speed = speed;
-                string Dir = "0";
-                string uid = "0";
-                string gps = "A";
-                string _event = "0";
-                string message = "null";
-                string loc = "N" + lat_str + "E" + long_str;
-                string package = "%%" + uid + "," +
-                              gps + "," +
-                              time + "," +
-                              loc + "," +
-                              Speed + "," +
-                              Dir + "," +
-                              Temp + "," +
-                              Status + "," +
-                              _event + "," +
-                              message + Environment.NewLine;
-                byte[] sendByte = Encoding.UTF8.GetBytes(package);
+                avlSbytes.Add(-88);
+                avlSbytes.Add(-88);
+                avlSbytes.Add(-128);
+                avlSbytes.Add(0);
+                avlSbytes.Add(34);
+                sbyte fiveSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year / 256));
+                avlSbytes.Add(fiveSbyte);
+                sbyte sixSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year % 256));
+                avlSbytes.Add(sixSbyte);
+                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Month));
+                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Day));
+                avlSbytes.Add(Convert.ToSByte(DateTime.Now.ToUniversalTime().Hour));
+                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Minute));
+                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Second));
+                for (int i = 0; i < 10; i++)
+                {
+                    avlSbytes.Add(48);
+                }
+                avlSbytes.Add(69);
+                ConvertLocation(avlSbytes, gps_long);
+                avlSbytes.Add(78);
+                ConvertLocation(avlSbytes, gps_lat);
+                for (int i = 0; i < 5; i++)
+                {
+                    avlSbytes.Add(0);
+                }
+                sbyte crc = avlSbytes[0];
+                for (int i = 1; i < avlSbytes.Count; i++)
+                {
+                    crc ^= avlSbytes[i];
+                }
+                avlSbytes.Add(crc);
+                avlSbytes.Add(13);
+
+                byte[] unsigned = new byte[avlSbytes.Count];
+                Buffer.BlockCopy(avlSbytes.ToArray(), 0, unsigned, 0, avlSbytes.Count);
+
                 if(_avlsTcpClient==null)
                 _avlsTcpClient = new TcpClient(ConfigurationManager.AppSettings["AVLS_SERVER_IP"],
                     int.Parse(ConfigurationManager.AppSettings["AVLS_SERVER_PORT"]));
                 if (_avlsNetworkStream == null)
                 {
                     _avlsNetworkStream = _avlsTcpClient.GetStream();
-                    _avlsBufferedStream = new BufferedStream(_avlsNetworkStream);
                 }
-                
-                if (_avlsBufferedStream.CanWrite)
+
+                if (_avlsNetworkStream.CanWrite)
                 {
-                    _avlsBufferedStream.Write(sendByte, 0, sendByte.Length);
-                    _avlsBufferedStream.Flush();
+                    _avlsNetworkStream.Write(unsigned, 0, unsigned.Length);
+                    _avlsNetworkStream.Flush();
                 }
                 
                 //avlsNetworkStream.Write(sendByte, 0, sendByte.Length);
@@ -266,6 +278,17 @@ namespace textBox
             }
 
 
+        }
+        private void ConvertLocation(List<sbyte> avlSbytes, string lat)
+        {
+            string[] result = lat.Split(new char[] { '.' });
+            string firstResult = result[1].Substring(0, 2);
+            string secondResult = result[1].Substring(2, 2);
+            string thridResult = result[1].Substring(4, 2);
+            avlSbytes.Add((sbyte)(Convert.ToByte(result[0])));
+            avlSbytes.Add((sbyte)(Convert.ToByte(firstResult)));
+            avlSbytes.Add((sbyte)(Convert.ToByte(secondResult)));
+            avlSbytes.Add((sbyte)(Convert.ToByte(thridResult)));
         }
         private void ConvertLocToAvlsLoc(ref string lat, ref string lon)
         {

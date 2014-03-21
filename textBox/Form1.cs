@@ -19,7 +19,7 @@ namespace textBox
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private System.Timers.Timer autoWebServiceRequestTimer;
-        private Thread requestTaskNumberThread,videoPlayerThread,roadTypeThread;
+        private Thread requestTaskNumberThread,videoPlayerThread,roadTypeThread,timeTickThread;
         static Random rand = new Random();
         private string[] _roadTypeStrings = new[]
         {
@@ -55,16 +55,27 @@ namespace textBox
             //textBoxTask.Text = "0";
 
             autoWebServiceRequestTimer =
-                    new System.Timers.Timer((int)uint.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
+                    new System.Timers.Timer(double.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
             autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
             
 
             requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
             videoPlayerThread = new Thread(()=>VideoPlayerThread());
             roadTypeThread = new Thread(()=>roadTypeFunction());
+            timeTickThread = new Thread(()=>timeTick());
             videoPlayerThread.Start();
             
             this.Closed += new EventHandler(Form1_Closed);
+        }
+
+        private void timeTick()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            while (true)
+            {
+                this.InvokeEx(f => f.Text = timecount.ToString());
+            }
         }
 
         private void roadTypeFunction()
@@ -91,6 +102,7 @@ namespace textBox
                     autoWebServiceRequestTimer.Enabled = true;
                     requestTaskNumberThread.Start();
                     roadTypeThread.Start();
+                    timeTickThread.Start();
                     break;
                 }
 
@@ -173,9 +185,10 @@ namespace textBox
         TcpClient _avlsTcpClient = null;
         NetworkStream _avlsNetworkStream = null;
         private uint sid = 1;
-        
+        private uint timecount = 0;
         private void WebServiceRequest()
         {
+            
             //http://192.168.1.35/carinfo.php?sid=1
             //sid range:1 to 5257
             /*
@@ -196,10 +209,16 @@ namespace textBox
             if (sid.Equals(5257))
             {
                 sid = 1;
+                timecount = 0;
+                this.InvokeEx(f => f.textBoxSpeed.Text = "");
+                this.InvokeEx(f => f.textBoxBattery.Text = "");
+                this.InvokeEx(f => f.textBoxDirection.Text = "");
                 Program.videoPlayer.Invoke((Action)delegate
                 {
                     Program.videoPlayer.Stop();
+                    timeTickThread.Abort();
                 });
+                
                 while (true)
                 {
                     if (Program.videoPlayer.VideoPlayerState != null)
@@ -208,6 +227,8 @@ namespace textBox
                             Program.videoPlayer.Invoke((Action)delegate
                             {
                                 Program.videoPlayer.Play();
+                                timeTickThread = new Thread(() => timeTick());
+                                timeTickThread.Start();
                             });
                             break;
                         }
@@ -217,6 +238,7 @@ namespace textBox
             else
             {
                 sid++;
+                timecount++;
             }
             // Navigate to the first company record.
             xml.FirstChild2();
@@ -362,6 +384,7 @@ namespace textBox
             lat = ((latNumberAfterPoint * 60 / 100 + latInt) * 100).ToString();
             lon = ((lonNumberAfterPoint * 60 / 100 + lonInt) * 100).ToString();
         }
+        
     }
     public static class ISynchronizeInvokeExtensions
     {

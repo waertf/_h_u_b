@@ -67,6 +67,7 @@ namespace textBox
         {
             autoWebServiceRequestTimer.Enabled = false;
             requestTaskNumberThread.Abort();
+            videoPlayerThread.Abort();
         }
 
         private ThreadStart TaskNumberRequest()

@@ -99,6 +99,7 @@ namespace textBox
                 if (Program.videoPlayer.VideoPlayerState!=null)
                 if (Program.videoPlayer.VideoPlayerState.Equals("Playing"))
                 {
+                    Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
                     autoWebServiceRequestTimer.Enabled = true;
                     requestTaskNumberThread.Start();
                     roadTypeThread.Start();
@@ -227,6 +228,7 @@ namespace textBox
                             Program.videoPlayer.Invoke((Action)delegate
                             {
                                 Program.videoPlayer.Play();
+                                Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
                                 timeTickThread = new Thread(() => timeTick());
                                 timeTickThread.Start();
                             });

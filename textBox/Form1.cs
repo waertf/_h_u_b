@@ -154,7 +154,26 @@ namespace textBox
                 ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
                                 @"/carinfo.php?sid=" + sid));
             if (sid.Equals(5257))
+            {
                 sid = 1;
+                Program.videoPlayer.Invoke((Action)delegate
+                {
+                    Program.videoPlayer.Stop();
+                });
+                while (true)
+                {
+                    if (Program.videoPlayer.VideoPlayerState != null)
+                        if (Program.videoPlayer.VideoPlayerState.Equals("Stopped"))
+                        {
+                            Program.videoPlayer.Invoke((Action)delegate
+                            {
+                                Program.videoPlayer.Play();
+                            });
+                            break;
+                        }
+
+                }
+            }
             else
             {
                 sid++;

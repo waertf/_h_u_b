@@ -19,12 +19,36 @@ namespace textBox
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private System.Timers.Timer autoWebServiceRequestTimer;
-        private Thread requestTaskNumberThread,videoPlayerThread;
+        private Thread requestTaskNumberThread,videoPlayerThread,roadTypeThread;
         static Random rand = new Random();
+        private string[] _roadTypeStrings = new[]
+        {
+            @"塞車時速10km/h",
+            @"塞車時速20km/h",
+            @"塞車時速30km/h",
+            @"塞車時速40km/h",
+            @"大排長龍",
+            @"車多擁擠",
+            @"事故造成交通緩慢",
+            @"翻車造成交通緩慢",
+            @"施工造成交通緩慢",
+            @"交通事故",
+            @"嚴重交通事故",
+            @"車輛故障",
+            @"交通事件",
+            @"交通管制",
+            @"道路有障礙物注意安全",
+            @"路面不平或有坑洞",
+            @"燈號不亮請注意",
+            ""            
+        };
         public Form1()
         {
             InitializeComponent();
-            
+            label6.Visible = false;
+            textBoxRoadType2.Visible = false;
+            label7.Visible = false;
+            textBoxRoadType3.Visible = false;
             sbyte[] signed = { -2, -1, 0, 1, 2 };
             byte[] unsigned = new byte[signed.Length];
             Buffer.BlockCopy(signed, 0, unsigned, 0, signed.Length); 
@@ -37,9 +61,19 @@ namespace textBox
 
             requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
             videoPlayerThread = new Thread(()=>VideoPlayerThread());
+            roadTypeThread = new Thread(()=>roadTypeFunction());
             videoPlayerThread.Start();
             
             this.Closed += new EventHandler(Form1_Closed);
+        }
+
+        private void roadTypeFunction()
+        {
+            while (true)
+            {
+                this.InvokeEx(f => f.textBoxRoadType1.Text = _roadTypeStrings[rand.Next(0, _roadTypeStrings.Length)]);
+                Thread.Sleep(rand.Next(10,16)*1000);
+            }
         }
 
         private void VideoPlayerThread()
@@ -56,6 +90,7 @@ namespace textBox
                 {
                     autoWebServiceRequestTimer.Enabled = true;
                     requestTaskNumberThread.Start();
+                    roadTypeThread.Start();
                     break;
                 }
 
@@ -68,6 +103,7 @@ namespace textBox
             autoWebServiceRequestTimer.Enabled = false;
             requestTaskNumberThread.Abort();
             videoPlayerThread.Abort();
+            roadTypeThread.Abort();
             Environment.Exit(0);
         }
 
@@ -142,11 +178,13 @@ namespace textBox
         {
             //http://192.168.1.35/carinfo.php?sid=1
             //sid range:1 to 5257
+            /*
             this.InvokeEx(f => f.textBoxRoadType1.Clear());
             this.InvokeEx(f => f.textBoxRoadType2.Clear());
             this.InvokeEx(f => f.textBoxRoadType3.Clear());
             this.InvokeEx(f => f.Invalidate());
             this.InvokeEx(f => f.Update());
+            */
             Chilkat.Xml xml = new Chilkat.Xml();
             xml.Encoding = "utf-8";
             //string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
@@ -203,6 +241,7 @@ namespace textBox
             this.InvokeEx(f => f.textBoxSpeed.Text = speed);
             this.InvokeEx(f => f.textBoxBattery.Text = electricity);
             this.InvokeEx(f => f.textBoxDirection.Text = direction);
+            /*
             for (int i = 0; i < roadTypeList.Count(); i++)
             {
                 switch (i)
@@ -218,6 +257,7 @@ namespace textBox
                         break;
                 }
             }
+            */
             this.InvokeEx(f => f.Invalidate());
             this.InvokeEx(f => f.Update());
 

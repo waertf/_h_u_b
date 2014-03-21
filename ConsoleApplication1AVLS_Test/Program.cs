@@ -24,7 +24,7 @@ namespace ConsoleApplication1AVLS_Test
                 avlSbytes.Add(sixSbyte);
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Month));
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Day));
-                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Hour));
+                avlSbytes.Add(Convert.ToSByte(DateTime.Now.ToUniversalTime().Hour));
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Minute));
                 avlSbytes.Add(Convert.ToSByte(DateTime.Now.Second));
                 for (int i = 0; i < 10; i++)

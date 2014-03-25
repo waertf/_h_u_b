@@ -99,10 +99,10 @@ namespace textBox
                 if (Program.videoPlayer.VideoPlayerState!=null)
                 if (Program.videoPlayer.VideoPlayerState.Equals("Playing"))
                 {
-                    Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
+                    //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
                     autoWebServiceRequestTimer.Enabled = true;
                     requestTaskNumberThread.Start();
-                    roadTypeThread.Start();
+                    //roadTypeThread.Start();
                     timeTickThread.Start();
                     break;
                 }
@@ -116,7 +116,7 @@ namespace textBox
             autoWebServiceRequestTimer.Enabled = false;
             requestTaskNumberThread.Abort();
             videoPlayerThread.Abort();
-            roadTypeThread.Abort();
+            //roadTypeThread.Abort();
             Environment.Exit(0);
         }
 
@@ -207,11 +207,11 @@ namespace textBox
             xml.LoadXml(
                 ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
                                 @"/carinfo.php?sid=" + sid));
-            if (sid.Equals(5257))
+            if (sid.Equals(5267))
             {
                 sid = 1;
                 timecount = 0;
-                this.InvokeEx(f => f.textBoxSpeed.Text = "");
+                this.InvokeEx(f => f.textBoxSpeed.Text = "0");
                 this.InvokeEx(f => f.textBoxBattery.Text = "");
                 this.InvokeEx(f => f.textBoxDirection.Text = "");
                 Program.videoPlayer.Invoke((Action)delegate
@@ -222,13 +222,14 @@ namespace textBox
                 
                 while (true)
                 {
+                    Thread.Sleep(3000);
                     if (Program.videoPlayer.VideoPlayerState != null)
                         if (Program.videoPlayer.VideoPlayerState.Equals("Stopped"))
                         {
                             Program.videoPlayer.Invoke((Action)delegate
                             {
                                 Program.videoPlayer.Play();
-                                Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
+                                //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
                                 timeTickThread = new Thread(() => timeTick());
                                 timeTickThread.Start();
                             });
@@ -265,7 +266,7 @@ namespace textBox
             this.InvokeEx(f => f.textBoxSpeed.Text = speed);
             this.InvokeEx(f => f.textBoxBattery.Text = electricity);
             this.InvokeEx(f => f.textBoxDirection.Text = direction);
-            /*
+            
             for (int i = 0; i < roadTypeList.Count(); i++)
             {
                 switch (i)
@@ -281,7 +282,7 @@ namespace textBox
                         break;
                 }
             }
-            */
+            
             this.InvokeEx(f => f.Invalidate());
             this.InvokeEx(f => f.Update());
 

@@ -219,7 +219,7 @@ namespace textBox
                     Program.videoPlayer.Stop();
                     timeTickThread.Abort();
                 });
-                
+                autoWebServiceRequestTimer.Enabled = false;
                 while (true)
                 {
                     Thread.Sleep(3000);
@@ -233,6 +233,7 @@ namespace textBox
                                 timeTickThread = new Thread(() => timeTick());
                                 timeTickThread.Start();
                             });
+                            autoWebServiceRequestTimer.Enabled = true;
                             break;
                         }
 

@@ -20,7 +20,7 @@ namespace textBox
             axWindowsMediaPlayer1.settings.autoStart = false;
             axWindowsMediaPlayer1.URL = AppDomain.CurrentDomain.BaseDirectory + ConfigurationManager.AppSettings["videoFile"];
             axWindowsMediaPlayer1.PlayStateChange += new AxWMPLib._WMPOCXEvents_PlayStateChangeEventHandler(axWindowsMediaPlayer1_PlayStateChange);
-            axWindowsMediaPlayer1.uiMode = "none";
+            //axWindowsMediaPlayer1.uiMode = "none";
             //axWindowsMediaPlayer1.Ctlcontrols.play();
             
             

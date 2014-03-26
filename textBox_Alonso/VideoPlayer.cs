@@ -103,5 +103,10 @@ namespace textBox
             axWindowsMediaPlayer1.uiMode = "none";
             axWindowsMediaPlayer1.fullScreen = true;
         }
+
+        public string Position()
+        {
+            return axWindowsMediaPlayer1.Ctlcontrols.currentPositionString;
+        }
     }
 }

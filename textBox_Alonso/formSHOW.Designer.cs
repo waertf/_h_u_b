@@ -365,11 +365,11 @@
             this.labelLoadState.AutoEllipsis = true;
             this.labelLoadState.AutoSize = true;
             this.labelLoadState.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelLoadState.Font = new System.Drawing.Font("標楷體", 60F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelLoadState.Font = new System.Drawing.Font("DFKai-SB", 35F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.labelLoadState.ForeColor = System.Drawing.Color.Red;
             this.labelLoadState.Location = new System.Drawing.Point(0, 0);
             this.labelLoadState.Name = "labelLoadState";
-            this.labelLoadState.Size = new System.Drawing.Size(198, 80);
+            this.labelLoadState.Size = new System.Drawing.Size(120, 47);
             this.labelLoadState.TabIndex = 0;
             this.labelLoadState.Text = "TEST";
             this.labelLoadState.TextChanged += new System.EventHandler(this.labelLoadState_TextChanged);

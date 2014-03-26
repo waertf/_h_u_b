@@ -72,7 +72,7 @@ namespace textBox
 
         void Form1_TextChanged(object sender, EventArgs e)
         {
-            WebServiceRequest();
+            WebServiceRequest(Program.videoPlayer.Position());
         }
 
         private void timeTick()
@@ -198,7 +198,7 @@ namespace textBox
         NetworkStream _avlsNetworkStream = null;
         private uint sid = 1;
         private uint timecount = 0;
-        private void WebServiceRequest()
+        private void WebServiceRequest(string videoPlayTime)
         {
 
             //http://192.168.1.35/carinfo.php?sid=1
@@ -215,10 +215,32 @@ namespace textBox
             //string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
             //Debug.WriteLine(ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] + @"/carinfo.php?sid=" + rand.Next(1,5258)));
             //xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
+            Debug.WriteLine("Program.videoPlayer.Position() length:" + videoPlayTime.Length);
+            int position = 0;
+            switch (videoPlayTime.Length)
+            {
+                case 5:
+                    {
+                        string currentTime = "00:" + videoPlayTime;
+                        TimeSpan resultTimeSpan = TimeSpan.Parse(currentTime);
+                        position = (int)resultTimeSpan.TotalSeconds;
+                    }
+
+                    break;
+                case 8:
+                    {
+                        //string currentTime = "00:" + Program.videoPlayer.Position();
+                        TimeSpan resultTimeSpan = TimeSpan.Parse(videoPlayTime);
+                        position = (int)resultTimeSpan.TotalSeconds;
+                    }
+                    break;
+            }
+            if (position.Equals(0))
+                return;
             xml.LoadXml(
                 ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
-                                @"/carinfo.php?sid=" + sid));
-            if (Program.videoPlayer.Position().Contains("01:27:47"))
+                                @"/carinfo.php?sid=" + position));
+            if (videoPlayTime.Contains("01:27:47"))
             {
                 sid = 1;
                 timecount = 0;

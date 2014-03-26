@@ -216,7 +216,7 @@ namespace textBox
             xml.LoadXml(
                 ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
                                 @"/carinfo.php?sid=" + sid));
-            if (sid.Equals(36))
+            if (Program.videoPlayer.Position().Contains("00:36"))
             {
                 sid = 1;
                 timecount = 0;

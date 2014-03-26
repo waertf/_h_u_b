@@ -23,7 +23,6 @@ namespace textBox
             //axWindowsMediaPlayer1.uiMode = "none";
             //axWindowsMediaPlayer1.Ctlcontrols.play();
             
-            
         }
 
         void axWindowsMediaPlayer1_PlayStateChange(object sender, AxWMPLib._WMPOCXEvents_PlayStateChangeEvent e)
@@ -96,6 +95,11 @@ namespace textBox
         public void Stop()
         {
             axWindowsMediaPlayer1.Ctlcontrols.stop();
+        }
+
+        public string Position()
+        {
+            return axWindowsMediaPlayer1.Ctlcontrols.currentPositionString;
         }
     }
 }

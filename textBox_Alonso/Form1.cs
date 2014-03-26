@@ -103,7 +103,7 @@ namespace textBox
                     //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
                     autoWebServiceRequestTimer.Enabled = true;
                     requestTaskNumberThread.Start();
-                    roadTypeThread.Start();
+                    //roadTypeThread.Start();
                     timeTickThread.Start();
                     break;
                 }

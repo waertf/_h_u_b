@@ -80,6 +80,9 @@ namespace textBox
             while (true)
             {
                 this.InvokeEx(f => f.Text = Program.videoPlayer.Position());
+                this.InvokeEx(f => f.Invalidate());
+                this.InvokeEx(f => f.Update());
+                Thread.Sleep(100);
             }
         }
 
@@ -222,7 +225,7 @@ namespace textBox
                 Program.videoPlayer.Invoke((Action)delegate
                 {
                     Program.videoPlayer.Stop();
-                    timeTickThread.Abort();
+                    //timeTickThread.Abort();
                 });
                 //autoWebServiceRequestTimer.Enabled = false;
                 while (true)
@@ -235,8 +238,8 @@ namespace textBox
                             {
                                 Program.videoPlayer.Play();
                                 //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
-                                timeTickThread = new Thread(() => timeTick());
-                                timeTickThread.Start();
+                                //timeTickThread = new Thread(() => timeTick());
+                                //timeTickThread.Start();
                             });
                             //autoWebServiceRequestTimer.Enabled = true;
                             break;

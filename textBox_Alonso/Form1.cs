@@ -863,6 +863,11 @@ namespace textBox
                 }
             }
         }
+
+        private void VideoMax_Click(object sender, EventArgs e)
+        {
+            Program.videoPlayer.VideoMax();
+        }
     }
 
     public static class ISynchronizeInvokeExtensions

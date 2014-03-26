@@ -44,6 +44,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.buttonShow = new System.Windows.Forms.Button();
             this.buttonHudMAX = new System.Windows.Forms.Button();
+            this.VideoMax = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxSpeed
@@ -190,11 +191,22 @@
             this.buttonHudMAX.UseVisualStyleBackColor = true;
             this.buttonHudMAX.Click += new System.EventHandler(this.buttonHudMAX_Click);
             // 
+            // VideoMax
+            // 
+            this.VideoMax.Location = new System.Drawing.Point(15, 289);
+            this.VideoMax.Name = "VideoMax";
+            this.VideoMax.Size = new System.Drawing.Size(75, 23);
+            this.VideoMax.TabIndex = 16;
+            this.VideoMax.Text = "Video Max";
+            this.VideoMax.UseVisualStyleBackColor = true;
+            this.VideoMax.Click += new System.EventHandler(this.VideoMax_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(392, 329);
+            this.Controls.Add(this.VideoMax);
             this.Controls.Add(this.buttonHudMAX);
             this.Controls.Add(this.buttonShow);
             this.Controls.Add(this.label7);
@@ -237,6 +249,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button buttonShow;
         private System.Windows.Forms.Button buttonHudMAX;
+        private System.Windows.Forms.Button VideoMax;
     }
 }
 

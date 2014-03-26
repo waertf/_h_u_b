@@ -126,6 +126,7 @@ namespace textBox
             //autoWebServiceRequestTimer.Enabled = false;
             requestTaskNumberThread.Abort();
             videoPlayerThread.Abort();
+            timeTickThread.Abort();
             //roadTypeThread.Abort();
             Environment.Exit(0);
         }

@@ -55,9 +55,9 @@ namespace textBox
             Buffer.BlockCopy(signed, 0, unsigned, 0, signed.Length); 
             //textBoxTask.Text = "0";
 
-            autoWebServiceRequestTimer =
-                    new System.Timers.Timer(double.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
-            autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
+            //autoWebServiceRequestTimer =
+                    //new System.Timers.Timer(double.Parse(ConfigurationManager.AppSettings["autorequest_interval"]));
+            //autoWebServiceRequestTimer.Elapsed += (sender, e) => { WebServiceRequest(); };
             
 
             requestTaskNumberThread = new Thread(()=>TaskNumberRequest());
@@ -67,6 +67,12 @@ namespace textBox
             videoPlayerThread.Start();
             
             this.Closed += new EventHandler(Form1_Closed);
+            this.TextChanged += new EventHandler(Form1_TextChanged);
+        }
+
+        void Form1_TextChanged(object sender, EventArgs e)
+        {
+            WebServiceRequest();
         }
 
         private void timeTick()
@@ -75,7 +81,7 @@ namespace textBox
             stopwatch.Start();
             while (true)
             {
-                this.InvokeEx(f => f.Text = timecount.ToString());
+                this.InvokeEx(f => f.Text = Program.videoPlayer.Position());
             }
         }
 
@@ -101,7 +107,7 @@ namespace textBox
                 if (Program.videoPlayer.VideoPlayerState.Equals("Playing"))
                 {
                     //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
-                    autoWebServiceRequestTimer.Enabled = true;
+                    //autoWebServiceRequestTimer.Enabled = true;
                     requestTaskNumberThread.Start();
                     //roadTypeThread.Start();
                     timeTickThread.Start();
@@ -114,7 +120,7 @@ namespace textBox
 
         void Form1_Closed(object sender, EventArgs e)
         {
-            autoWebServiceRequestTimer.Enabled = false;
+            //autoWebServiceRequestTimer.Enabled = false;
             requestTaskNumberThread.Abort();
             videoPlayerThread.Abort();
             //roadTypeThread.Abort();
@@ -220,7 +226,7 @@ namespace textBox
                     Program.videoPlayer.Stop();
                     timeTickThread.Abort();
                 });
-                autoWebServiceRequestTimer.Enabled = false;
+                //autoWebServiceRequestTimer.Enabled = false;
                 while (true)
                 {
                     Thread.Sleep(3000);
@@ -234,7 +240,7 @@ namespace textBox
                                 timeTickThread = new Thread(() => timeTick());
                                 timeTickThread.Start();
                             });
-                            autoWebServiceRequestTimer.Enabled = true;
+                            //autoWebServiceRequestTimer.Enabled = true;
                             break;
                         }
 

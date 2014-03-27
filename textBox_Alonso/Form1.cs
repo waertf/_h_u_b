@@ -200,210 +200,220 @@ namespace textBox
         private uint timecount = 0;
         private void WebServiceRequest(string videoPlayTime)
         {
-
-            //http://192.168.1.35/carinfo.php?sid=1
-            //sid range:1 to 5257
-            /*
-            this.InvokeEx(f => f.textBoxRoadType1.Clear());
-            this.InvokeEx(f => f.textBoxRoadType2.Clear());
-            this.InvokeEx(f => f.textBoxRoadType3.Clear());
-            this.InvokeEx(f => f.Invalidate());
-            this.InvokeEx(f => f.Update());
-            */
-            Chilkat.Xml xml = new Chilkat.Xml();
-            xml.Encoding = "utf-8";
-            //string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
-            //Debug.WriteLine(ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] + @"/carinfo.php?sid=" + rand.Next(1,5258)));
-            //xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
-            Debug.WriteLine("Program.videoPlayer.Position() length:" + videoPlayTime.Length);
-            int position = 0;
-            switch (videoPlayTime.Length)
-            {
-                case 5:
-                    {
-                        string currentTime = "00:" + videoPlayTime;
-                        TimeSpan resultTimeSpan = TimeSpan.Parse(currentTime);
-                        position = (int)resultTimeSpan.TotalSeconds;
-                    }
-
-                    break;
-                case 8:
-                    {
-                        //string currentTime = "00:" + Program.videoPlayer.Position();
-                        TimeSpan resultTimeSpan = TimeSpan.Parse(videoPlayTime);
-                        position = (int)resultTimeSpan.TotalSeconds;
-                    }
-                    break;
-            }
-            if (position.Equals(0))
-                return;
-            xml.LoadXml(
-                ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
-                                @"/carinfo.php?sid=" + position));
-            if (videoPlayTime.Contains("01:27:47"))
-            {
-                sid = 1;
-                timecount = 0;
-                this.InvokeEx(f => f.textBoxSpeed.Text = "0");
-                this.InvokeEx(f => f.textBoxBattery.Text = "");
-                this.InvokeEx(f => f.textBoxDirection.Text = "");
-                Program.videoPlayer.Invoke((Action)delegate
-                {
-                    Program.videoPlayer.Stop();
-                    //timeTickThread.Abort();
-                });
-                //autoWebServiceRequestTimer.Enabled = false;
-                while (true)
-                {
-                    Thread.Sleep(3000);
-                    if (Program.videoPlayer.VideoPlayerState != null)
-                        if (Program.videoPlayer.VideoPlayerState.Equals("Stopped"))
-                        {
-                            Program.videoPlayer.Invoke((Action)delegate
-                            {
-                                Program.videoPlayer.Play();
-                                //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
-                                //timeTickThread = new Thread(() => timeTick());
-                                //timeTickThread.Start();
-                            });
-                            //autoWebServiceRequestTimer.Enabled = true;
-                            break;
-                        }
-
-                }
-            }
-            else
-            {
-                sid++;
-                timecount++;
-            }
-            // Navigate to the first company record.
-            xml.FirstChild2();
-            string gps_long = xml.GetChildContent("gps_long");
-            string gps_lat = xml.GetChildContent("gps_lat");
-            string speed = xml.GetChildContent("speed");
-            string electricity = xml.GetChildContent("electricity");
-            string direction = xml.GetChildContent("direction");
-            xml.NextSibling2();
-            int roadCount = xml.NumChildrenHavingTag("record");
-            xml.FirstChild2();
-            List<string> roadTypeList = new List<string>();
-            for (int i = 0; i < roadCount; i++)
-            {
-                roadTypeList.Add(xml.GetChildContent("roadtype"));
-                xml.NextSibling2();
-            }
-            xml.Dispose();
-            //string roadtype1 = xml.GetChildContent("roadtype");
-            //xml.NextSibling2();
-            //string roadtype2 = xml.GetChildContent("roadtype");
-            this.InvokeEx(f => f.textBoxSpeed.Text = speed);
-            this.InvokeEx(f => f.textBoxBattery.Text = electricity);
-            this.InvokeEx(f => f.textBoxDirection.Text = direction);
-
-            for (int i = 0; i < roadTypeList.Count(); i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        this.InvokeEx(f => f.textBoxRoadType1.Text = roadTypeList[0]);
-                        break;
-                    case 1:
-                        this.InvokeEx(f => f.textBoxRoadType2.Text = roadTypeList[1]);
-                        break;
-                    case 2:
-                        this.InvokeEx(f => f.textBoxRoadType3.Text = roadTypeList[2]);
-                        break;
-                }
-            }
-
-            this.InvokeEx(f => f.Invalidate());
-            this.InvokeEx(f => f.Update());
-
-
-            //start to send to avls server
-
-            List<sbyte> avlSbytes = new List<sbyte>();
             try
             {
-                avlSbytes.Add(-88);
-                avlSbytes.Add(-88);
-                avlSbytes.Add(-128);
-                avlSbytes.Add(0);
-                avlSbytes.Add(34);
-                sbyte fiveSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year / 256));
-                avlSbytes.Add(fiveSbyte);
-                sbyte sixSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year % 256));
-                avlSbytes.Add(sixSbyte);
-                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Month));
-                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Day));
-                avlSbytes.Add(Convert.ToSByte(DateTime.Now.ToUniversalTime().Hour));
-                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Minute));
-                avlSbytes.Add(Convert.ToSByte(DateTime.Now.Second));
-
-                avlSbytes.Add(0x30);
-                avlSbytes.Add(0x39);
-                avlSbytes.Add(0x31);
-                avlSbytes.Add(0x32);
-                avlSbytes.Add(0x33);
-                avlSbytes.Add(0x34);
-                avlSbytes.Add(0x35);
-                avlSbytes.Add(0x36);
-                avlSbytes.Add(0x37);
-                avlSbytes.Add(0x38);
-
-                avlSbytes.Add(69);
-                ConvertLocation(avlSbytes, gps_long);
-                avlSbytes.Add(78);
-                ConvertLocation(avlSbytes, gps_lat);
-                for (int i = 0; i < 5; i++)
+                //http://192.168.1.35/carinfo.php?sid=1
+                //sid range:1 to 5257
+                /*
+                this.InvokeEx(f => f.textBoxRoadType1.Clear());
+                this.InvokeEx(f => f.textBoxRoadType2.Clear());
+                this.InvokeEx(f => f.textBoxRoadType3.Clear());
+                this.InvokeEx(f => f.Invalidate());
+                this.InvokeEx(f => f.Update());
+                */
+                Chilkat.Xml xml = new Chilkat.Xml();
+                xml.Encoding = "utf-8";
+                //string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+                //Debug.WriteLine(ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] + @"/carinfo.php?sid=" + rand.Next(1,5258)));
+                //xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
+                Debug.WriteLine("Program.videoPlayer.Position() length:" + videoPlayTime.Length);
+                int position = 0;
+                switch (videoPlayTime.Length)
                 {
+                    case 5:
+                        {
+                            string currentTime = "00:" + videoPlayTime;
+                            TimeSpan resultTimeSpan = TimeSpan.Parse(currentTime);
+                            position = (int)resultTimeSpan.TotalSeconds;
+                        }
+
+                        break;
+                    case 8:
+                        {
+                            //string currentTime = "00:" + Program.videoPlayer.Position();
+                            TimeSpan resultTimeSpan = TimeSpan.Parse(videoPlayTime);
+                            position = (int)resultTimeSpan.TotalSeconds;
+                        }
+                        break;
+                }
+                if (position.Equals(0))
+                    return;
+                xml.LoadXml(
+                    ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
+                                    @"/carinfo.php?sid=" + position));
+                if (videoPlayTime.Contains("01:27:37"))
+                {
+                    sid = 1;
+                    timecount = 0;
+                    this.InvokeEx(f => f.textBoxSpeed.Text = "0");
+                    this.InvokeEx(f => f.textBoxBattery.Text = "");
+                    this.InvokeEx(f => f.textBoxDirection.Text = "");
+                    this.InvokeEx(f => f.Invalidate());
+                    this.InvokeEx(f => f.Update());
+                    Program.videoPlayer.Invoke((Action)delegate
+                    {
+                        Program.videoPlayer.Stop();
+                        //timeTickThread.Abort();
+                    });
+                    //autoWebServiceRequestTimer.Enabled = false;
+                    while (true)
+                    {
+                        Thread.Sleep(3000);
+                        if (Program.videoPlayer.VideoPlayerState != null)
+                            if (Program.videoPlayer.VideoPlayerState.Equals("Stopped"))
+                            {
+                                Program.videoPlayer.Invoke((Action)delegate
+                                {
+                                    Program.videoPlayer.Play();
+                                    //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
+                                    //timeTickThread = new Thread(() => timeTick());
+                                    //timeTickThread.Start();
+                                });
+                                //autoWebServiceRequestTimer.Enabled = true;
+                                break;
+                            }
+
+                    }
+                }
+                else
+                {
+                    sid++;
+                    timecount++;
+                }
+                // Navigate to the first company record.
+                xml.FirstChild2();
+                string gps_long = xml.GetChildContent("gps_long");
+                string gps_lat = xml.GetChildContent("gps_lat");
+                string speed = xml.GetChildContent("speed");
+                string electricity = xml.GetChildContent("electricity");
+                string direction = xml.GetChildContent("direction");
+                xml.NextSibling2();
+                int roadCount = xml.NumChildrenHavingTag("record");
+                xml.FirstChild2();
+                List<string> roadTypeList = new List<string>();
+                for (int i = 0; i < roadCount; i++)
+                {
+                    roadTypeList.Add(xml.GetChildContent("roadtype"));
+                    xml.NextSibling2();
+                }
+                xml.Dispose();
+                //string roadtype1 = xml.GetChildContent("roadtype");
+                //xml.NextSibling2();
+                //string roadtype2 = xml.GetChildContent("roadtype");
+                this.InvokeEx(f => f.textBoxSpeed.Text = speed);
+                this.InvokeEx(f => f.textBoxBattery.Text = electricity);
+                this.InvokeEx(f => f.textBoxDirection.Text = direction);
+
+                for (int i = 0; i < roadTypeList.Count(); i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            this.InvokeEx(f => f.textBoxRoadType1.Text = roadTypeList[0]);
+                            break;
+                        case 1:
+                            this.InvokeEx(f => f.textBoxRoadType2.Text = roadTypeList[1]);
+                            break;
+                        case 2:
+                            this.InvokeEx(f => f.textBoxRoadType3.Text = roadTypeList[2]);
+                            break;
+                    }
+                }
+
+                this.InvokeEx(f => f.Invalidate());
+                this.InvokeEx(f => f.Update());
+
+
+                //start to send to avls server
+
+                List<sbyte> avlSbytes = new List<sbyte>();
+                try
+                {
+                    avlSbytes.Add(-88);
+                    avlSbytes.Add(-88);
+                    avlSbytes.Add(-128);
                     avlSbytes.Add(0);
+                    avlSbytes.Add(34);
+                    sbyte fiveSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year / 256));
+                    avlSbytes.Add(fiveSbyte);
+                    sbyte sixSbyte = (sbyte)(Convert.ToByte(DateTime.Now.Year % 256));
+                    avlSbytes.Add(sixSbyte);
+                    avlSbytes.Add(Convert.ToSByte(DateTime.Now.Month));
+                    avlSbytes.Add(Convert.ToSByte(DateTime.Now.Day));
+                    avlSbytes.Add(Convert.ToSByte(DateTime.Now.ToUniversalTime().Hour));
+                    avlSbytes.Add(Convert.ToSByte(DateTime.Now.Minute));
+                    avlSbytes.Add(Convert.ToSByte(DateTime.Now.Second));
+
+                    avlSbytes.Add(0x30);
+                    avlSbytes.Add(0x39);
+                    avlSbytes.Add(0x31);
+                    avlSbytes.Add(0x32);
+                    avlSbytes.Add(0x33);
+                    avlSbytes.Add(0x34);
+                    avlSbytes.Add(0x35);
+                    avlSbytes.Add(0x36);
+                    avlSbytes.Add(0x37);
+                    avlSbytes.Add(0x38);
+
+                    avlSbytes.Add(69);
+                    ConvertLocation(avlSbytes, gps_long);
+                    avlSbytes.Add(78);
+                    ConvertLocation(avlSbytes, gps_lat);
+                    for (int i = 0; i < 5; i++)
+                    {
+                        avlSbytes.Add(0);
+                    }
+                    sbyte crc = avlSbytes[0];
+                    for (int i = 1; i < avlSbytes.Count; i++)
+                    {
+                        crc ^= avlSbytes[i];
+                    }
+                    avlSbytes.Add(crc);
+                    avlSbytes.Add(13);
+
+                    byte[] unsigned = new byte[avlSbytes.Count];
+                    Buffer.BlockCopy(avlSbytes.ToArray(), 0, unsigned, 0, avlSbytes.Count);
+
+                    if (_avlsTcpClient == null)
+                        _avlsTcpClient = new TcpClient(ConfigurationManager.AppSettings["AVLS_SERVER_IP"],
+                            int.Parse(ConfigurationManager.AppSettings["AVLS_SERVER_PORT"]));
+                    if (_avlsNetworkStream == null)
+                    {
+                        _avlsNetworkStream = _avlsTcpClient.GetStream();
+                    }
+
+                    if (_avlsNetworkStream.CanWrite)
+                    {
+                        _avlsNetworkStream.Write(unsigned, 0, unsigned.Length);
+                        _avlsNetworkStream.Flush();
+                    }
+
+                    //avlsNetworkStream.Write(sendByte, 0, sendByte.Length);
+                    //avlsNetworkStream.Flush();
                 }
-                sbyte crc = avlSbytes[0];
-                for (int i = 1; i < avlSbytes.Count; i++)
+                catch (Exception ex)
                 {
-                    crc ^= avlSbytes[i];
+
+                    log.Error(ex);
+                    if (_avlsTcpClient != null)
+                        _avlsTcpClient.Close();
+                    if (_avlsNetworkStream != null)
+                        _avlsNetworkStream.Close();
+                    _avlsTcpClient = null;
+                    _avlsNetworkStream = null;
+
                 }
-                avlSbytes.Add(crc);
-                avlSbytes.Add(13);
-
-                byte[] unsigned = new byte[avlSbytes.Count];
-                Buffer.BlockCopy(avlSbytes.ToArray(), 0, unsigned, 0, avlSbytes.Count);
-
-                if (_avlsTcpClient == null)
-                    _avlsTcpClient = new TcpClient(ConfigurationManager.AppSettings["AVLS_SERVER_IP"],
-                        int.Parse(ConfigurationManager.AppSettings["AVLS_SERVER_PORT"]));
-                if (_avlsNetworkStream == null)
+                finally
                 {
-                    _avlsNetworkStream = _avlsTcpClient.GetStream();
-                }
 
-                if (_avlsNetworkStream.CanWrite)
-                {
-                    _avlsNetworkStream.Write(unsigned, 0, unsigned.Length);
-                    _avlsNetworkStream.Flush();
                 }
-
-                //avlsNetworkStream.Write(sendByte, 0, sendByte.Length);
-                //avlsNetworkStream.Flush();
             }
             catch (Exception ex)
             {
-
+                
                 log.Error(ex);
-                if (_avlsTcpClient != null)
-                    _avlsTcpClient.Close();
-                if (_avlsNetworkStream != null)
-                    _avlsNetworkStream.Close();
-                _avlsTcpClient = null;
-                _avlsNetworkStream = null;
-
             }
-            finally
-            {
-
-            }
+            
 
 
         }
@@ -441,7 +451,8 @@ namespace textBox
         private void textBoxSpeed_TextChanged(object sender, EventArgs e)
         {
             string strSpeedTemp = textBoxSpeed.Text;
-
+            if(string.IsNullOrEmpty(strSpeedTemp))
+                return;
             double doubleSpeedTemp = System.Convert.ToDouble(strSpeedTemp);
 
             strSpeedTemp = doubleSpeedTemp.ToString("#");

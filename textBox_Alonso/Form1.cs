@@ -214,7 +214,7 @@ namespace textBox
                 Chilkat.Xml xml = new Chilkat.Xml();
                 xml.Encoding = "utf-8";
                 //string[] file_list = Directory.GetFiles(Environment.CurrentDirectory, "*.xml", SearchOption.TopDirectoryOnly);
-                //Debug.WriteLine(ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] + @"/carinfo.php?sid=" + rand.Next(1,5258)));
+                //Debug.WriteLine(ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["III_IP_ADDRESS"] + @"/carinfo.php?sid=" + rand.Next(1,5258)));
                 //xml.LoadXmlFile(file_list[rand.Next(0,file_list.Length)]);
                 Debug.WriteLine("Program.videoPlayer.Position() length:" + videoPlayTime.Length);
                 int position = 0;
@@ -239,7 +239,7 @@ namespace textBox
                 if (position.Equals(0))
                     return;
                 xml.LoadXml(
-                    ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["STUPID_IP_ADDRESS"] +
+                    ReadTextFromUrl(@"http://" + ConfigurationManager.AppSettings["III_IP_ADDRESS"] +
                                     @"/carinfo.php?sid=" + position));
                 if (videoPlayTime.Contains("01:27:37"))
                 {

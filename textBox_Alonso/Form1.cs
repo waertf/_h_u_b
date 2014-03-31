@@ -72,7 +72,9 @@ namespace textBox
 
         void Form1_TextChanged(object sender, EventArgs e)
         {
-            WebServiceRequest(Program.videoPlayer.Position());
+            Thread webServiceRequesThread = new Thread(() => { WebServiceRequest(Program.videoPlayer.Position()); });
+            webServiceRequesThread.Start();
+            
         }
 
         private void timeTick()

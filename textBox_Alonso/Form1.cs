@@ -12,6 +12,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using keeplive;
 
 namespace textBox
 {
@@ -143,9 +144,13 @@ namespace textBox
                 string data = string.Empty;
                 try
                 {
-                    if(taskTcpClient==null)
+                    if (taskTcpClient == null)
+                    {
                         taskTcpClient = new TcpClient(ConfigurationManager.AppSettings["TASK_SERVER_IP"],
                     int.Parse(ConfigurationManager.AppSettings["TASK_SERVER_PORT"]));
+                        Keeplive.keep(taskTcpClient.Client);
+                    }
+                        
                     if (taskNetStream == null)
                     {
                         taskNetStream = taskTcpClient.GetStream();

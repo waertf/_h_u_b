@@ -272,6 +272,7 @@ namespace textBox
                                 Program.videoPlayer.Invoke((Action)delegate
                                 {
                                     Program.videoPlayer.Play();
+                                    Program.videoPlayer.VideoMax();
                                     //Thread.Sleep(int.Parse(ConfigurationManager.AppSettings["delayTime"]));
                                     //timeTickThread = new Thread(() => timeTick());
                                     //timeTickThread.Start();
